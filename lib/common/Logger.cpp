@@ -12,8 +12,12 @@ Logger::~Logger() {
     file_.close();
 }
 
-void Logger::changeLogLevel(const LogLevel logLevel) noexcept {
+inline void Logger::changeLogLevel(const LogLevel logLevel) noexcept {
     level_ = logLevel;
+}
+
+inline Logger::LogLevel Logger::getDefaultLogLevel() const noexcept {
+    return level_;
 }
 
 void Logger::DEBUG(const std::string& message) {

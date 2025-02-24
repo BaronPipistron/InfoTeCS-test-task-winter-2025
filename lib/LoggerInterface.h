@@ -1,4 +1,4 @@
-#ifndef _LOGGER_INTERFACE_H
+#ifndef _LOGGER_INTERFACE_H_
 #define _LOGGER_INTERFACE_H_
 
 #include <dlfcn.h>
@@ -21,6 +21,7 @@ class LoggerInterface {
     virtual ~LoggerInterface() = default;
 
     virtual void changeLogLevel(const LogLevel) noexcept = 0;
+    virtual LogLevel getDefaultLogLevel() const noexcept = 0;
     
     virtual void DEBUG(const std::string&) = 0;
     virtual void INFO(const std::string&) = 0;
@@ -30,7 +31,25 @@ class LoggerInterface {
     virtual void FATAL(const std::string&) = 0;
 };
 
-extern "C" std::unique_ptr<LoggerInterface> getLoggerInterface(
+inline LoggerInterface::LogLevel stringToLogLevel(const std::string& str) {
+    if (str == "DEBUG") {
+        return LoggerInterface::LogLevel::DEBUG;
+    } else if (str == "INFO") {
+        return LoggerInterface::LogLevel::INFO;
+    } else if (str == "TRACE") {
+        return LoggerInterface::LogLevel::TRACE;
+    } else if (str == "WARN") {
+        return LoggerInterface::LogLevel::WARN;
+    } else if (str == "ERROR") {
+        return LoggerInterface::LogLevel::ERROR;
+    } else if (str == "FATAL") {
+        return LoggerInterface::LogLevel::FATAL;
+    }
+
+    return LoggerInterface::LogLevel::NONE;
+}
+
+extern "C" inline std::unique_ptr<LoggerInterface> getLoggerInterface(
     void* lib,
     const std::string& journalFile, 
     const LoggerInterface::LogLevel logLevel
@@ -55,4 +74,4 @@ extern "C" std::unique_ptr<LoggerInterface> getLoggerInterface(
     return loggerInterface;
 }
 
-#endif // _LOGGER_INTERFACE_HS
+#endif // _LOGGER_INTERFACE_H_

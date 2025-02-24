@@ -16,6 +16,7 @@ class Logger: public LoggerInterface{
     ~Logger();
 
     void changeLogLevel(const LogLevel) noexcept;
+    LogLevel getDefaultLogLevel() const noexcept;
     
     void DEBUG(const std::string&);
     void INFO(const std::string&);
