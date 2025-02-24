@@ -8,18 +8,10 @@
 #include <memory>
 #include <string>
 
-class Logger {
-  public:
-    enum class LogLevel {
-        NONE,
-        DEBUG,
-        INFO,
-        TRACE,
-        WARN,
-        ERROR,
-        FATAL
-    };
+#include "../LoggerInterface.h"
 
+class Logger: public LoggerInterface{
+  public:
     Logger(const std::string&, const LogLevel);
     ~Logger();
 
@@ -40,9 +32,11 @@ class Logger {
     std::ofstream file_; 
 };
 
-extern "C" inline std::unique_ptr<Logger> createLogger(const std::string& journalFile, const Logger::LogLevel logLevel) {
-        return std::make_unique<Logger>(journalFile, logLevel);
-}
+extern "C" std::unique_ptr<LoggerInterface> createLogger(
+    const std::string& journalFile, 
+    const Logger::LogLevel logLevel
+); 
+
 
 #endif // _LOGGER_H_
 
